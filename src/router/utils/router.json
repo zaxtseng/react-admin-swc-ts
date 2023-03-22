@@ -1,0 +1,69 @@
+[
+	{
+		"path": "/dashboard",
+		"element": "Dashboard/index",
+		"label": "总控台",
+		"icon": "DashboardOutlined"
+	},
+	{
+		"path": "/editor",
+		"label": "编辑器",
+		"icon": "FileTextOutlined",
+		"children": [
+			{
+				"path": "/md-editor",
+				"label": "MD编辑器",
+				"element": "Editor/MdEditor/index"
+			},
+			{
+				"path": "/rich-text-editor",
+				"label": "富文本编辑器",
+				"element": "Editor/RichEditor/index"
+			}
+		]
+	},
+	{
+		"path": "/nested-menu",
+		"label": "嵌套路由",
+		"icon": "MenuFoldOutlined",
+		"children": [
+			{
+				"path": "/nested-menu-1",
+				"element": "NestedMenu/index",
+				"label": "菜单1"
+			}
+		]
+	},
+	{
+		"path": "/system",
+		"label": "系统管理",
+		"icon": "BugOutlined",
+		"children": [
+			{
+				"path": "/menu",
+				"label": "菜单管理",
+				"element": "System/Menu/index"
+			},
+			{
+				"path": "/menu/:id/detail",
+				"label": "菜单详情",
+				"element": "System/MenuDetail/index",
+				"isHide": true,
+				"data": {
+					"activeKey": "/system/menu"
+				}
+			},
+			{
+				"path": "/rule",
+				"label": "角色管理",
+				"element": "System/Rule/index"
+			}
+		]
+	},
+	{
+		"path": "/doc",
+		"element": "Doc/index",
+		"label": "项目文档",
+		"icon": "FileTextOutlined"
+	}
+]

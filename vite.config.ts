@@ -1,3 +1,4 @@
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -12,10 +13,13 @@ import { useEnv } from './build';
 export default defineConfig(({ mode }): UserConfig => {
 	// 根据当前工作目录中的 `mode` 加载 .env 文件
 	// 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
-	const env = loadEnv(mode, process.cwd(), '');
+	const env = loadEnv(mode, process.cwd(), '') as ImportMetaEnv;
 	const viteEnv = useEnv(env);
 
+	// console.log('env:', env);
+
 	return {
+		base: './',
 		// alias config
 		resolve: {
 			alias: {
@@ -24,12 +28,11 @@ export default defineConfig(({ mode }): UserConfig => {
 				'@build': path.join(__dirname, 'build')
 			}
 		},
-		envDir: 'env',
 		// global css
 		css: {},
 		// server config
 		server: {
-			host: '0.0.0.0', // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
+			// host: '0.0.0.0', // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
 			port: viteEnv.VITE_PORT,
 			open: viteEnv.VITE_OPEN,
 			cors: true,
@@ -46,10 +49,11 @@ export default defineConfig(({ mode }): UserConfig => {
 		// plugins
 		plugins: [
 			react(),
+			vanillaExtractPlugin(),
 			createHtmlPlugin({
 				inject: {
 					data: {
-						title: viteEnv.VITE_GLOB_APP_TITLE
+						title: env.VITE_GLOB_APP_TITLE
 					}
 				}
 			}),

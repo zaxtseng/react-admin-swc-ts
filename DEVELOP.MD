@@ -1,34 +1,3 @@
-# 选型
-本项目以打造React Admin Awesome为目的.
-
-选型上比较激进,尽量选择一些比较前沿的东西,虽然也有稍微保守的,但那是在追求创新的情况下力求稳定(斜眼笑).
-
-## 基础选型
-安装包 | 用途
---|--
-react18|前端库(默认使用Hooks)
-vite4|构建工具
-typescript| js的超集
-antd5| css组件库(后期可能换MUI,ChakraUI)
-vanilla-extract|CSS-in-JS库(后期可能换tailwindcss)
-plugin-react-swc| SWC+esbuild编译,速度上天
-zustand| 轻量级状态管理库(替代redux)
-umi-request|请求三方库(替代axios,虽然没axios好用且两年未更新)
-SWR|请求状态库(替代useFetch,ReactQuery)
-## 开发环境选型
-主要是一些方便统一开发的插件.
-安装包 | 用途
---|--
-eslint|ts,js代码检查
-stylelint|css样式检查
-prettier|代码美化格式化
-husky| git预提交
-lint-staged|只对暂存区的代码进行检验
-commitlint|提交commit规范
-commitizen|命令行提示工具，写出规范的commit message
-@commitlint/config-conventional|Anglar 的提交规范
-cz-git|标准输出格式的 commitizen 适配器
-release-it|生成版本变更日志
 # 安装
 ## 前置条件
 使用pnpm做包管理工具,node版本16+,使用nvm管理node版本(pnpm和nvm如何安装请自行google).
@@ -54,15 +23,7 @@ cd react-admin-swc-ts
 pnpm install
 pnpm dev --open
 ```
-## 安装antd
-```bash
-pnpm add antd
-```
-### 样式重置
-在`main.tsx`文件中添加.
-```ts
-import "antd/dist/reset.css";
-```
+
 # 开发环境安装
 ## 统一编辑器规范
 
@@ -496,30 +457,127 @@ pnpm add @commitlint/cli @commitlint/config-conventional -D
  * e.g. feat: 这是一个新的feature
  */
 
-const types = [
-  'feat', // 新功能 feature
-  'fix', // 修复 bug
-  'docs', // 文档注释
-  'style', // 代码格式(不影响代码运行的变动)
-  'refactor', // 重构(既不增加新功能，也不是修复bug)
-  'perf', // 性能优化
-  'test', // 增加测试
-  'chore', // 构建过程或辅助工具的变动
-  'revert', // 回退
-  'build' // 打包
-]
+// .commitlintrc.js
+/** @type {import('cz-git').UserConfig} */
 
-const commitTypeRules = [
-  2, 'always', types
-]
+/*
+ * @Description: commit-msg提交信息格式规范
+ *
+ * commit-msg格式: <type>(scope?): <subject>
+ *   - type: 用于表明我们这次提交的改动类型，是新增了功能？还是修改了测试代码？又或者是更新了文档？
+ *     - build: 编译相关的修改，例如发布版本、对项目构建或者依赖的改动
+ *     - chore: 其他修改, 比如改变构建流程、或者增加依赖库、工具等
+ *     - ci: 持续集成修改
+ *     - docs: 文档修改
+ *     - feat: 新特性、新功能
+ *     - fix: 修改bug
+ *     - perf: 优化相关，比如提升性能、体验
+ *     - refactor: 代码重构
+ *     - revert: 回滚到上一个版本
+ *     - style: 代码格式修改, 注意不是 css 修改
+ *     - test: 测试用例修改
+ *   - scope：一个可选的修改范围。用于标识此次提交主要涉及到代码中哪个模块。
+ *   - Subject：一句话描述此次提交的主要内容，做到言简意赅
+ */
 
 module.exports = {
-  extends: ['@commitlint/config-conventional'],
-  rules: {
-    "type-enum": commitTypeRules
+	ignores: [commit => commit.includes('init')],
+	extends: ['@commitlint/config-conventional'],
+	rules: {
+		// @see: https://commitlint.js.org/#/reference-rules
+		'body-leading-blank': [2, 'always'],
+		'footer-leading-blank': [1, 'always'],
+		'header-max-length': [2, 'always', 108],
+		'subject-empty': [2, 'never'],
+		'type-empty': [2, 'never'],
+		'subject-case': [0],
+		'type-enum': [
+			2,
+			'always',
+			[
+				'feat',
+				'fix',
+				'docs',
+				'style',
+				'refactor',
+				'perf',
+				'test',
+				'build',
+				'ci',
+				'chore',
+				'revert',
+				'wip',
+				'workflow',
+				'types',
+				'release'
+			]
+		]
+	},
+  prompt: {
+    alias: { fd: 'docs: fix typos' },
+    messages: {
+      type: '选择你要提交的类型 :',
+      scope: '选择一个提交范围（可选）:',
+      customScope: '请输入自定义的提交范围 :',
+      subject: '填写简短精炼的变更描述 :\n',
+      body: '填写更加详细的变更描述（可选）。使用 "|" 换行 :\n',
+      breaking: '列举非兼容性重大的变更（可选）。使用 "|" 换行 :\n',
+      footerPrefixesSelect: '选择关联issue前缀（可选）:',
+      customFooterPrefix: '输入自定义issue前缀 :',
+      footer: '列举关联issue (可选) 例如: #31, #I3244 :\n',
+      confirmCommit: '是否提交或修改commit ?'
+    },
+    skipQuestions: ['footerPrefixesSelect','body','breaking','customFooterPrefix','footer'],
+    types: [
+      { value: 'feat', name: 'feat:     新增功能 | A new feature' },
+      { value: 'fix', name: 'fix:      修复缺陷 | A bug fix' },
+      { value: 'docs', name: 'docs:     文档更新 | Documentation only changes' },
+      { value: 'style', name: 'style:    代码格式 | Changes that do not affect the meaning of the code' },
+      { value: 'refactor', name: 'refactor: 代码重构 | A code change that neither fixes a bug nor adds a feature' },
+      { value: 'perf', name: 'perf:     性能提升 | A code change that improves performance' },
+      { value: 'test', name: 'test:     测试相关 | Adding missing tests or correcting existing tests' },
+      { value: 'build', name: 'build:    构建相关 | Changes that affect the build system or external dependencies' },
+      { value: 'ci', name: 'ci:       持续集成 | Changes to our CI configuration files and scripts' },
+      { value: 'revert', name: 'revert:   回退代码 | Revert to a commit' },
+      { value: 'chore', name: 'chore:    其他修改 | Other changes that do not modify src or test files' },
+    ],
+    useEmoji: false,
+    emojiAlign: 'center',
+    useAI: false,
+    aiNumber: 1,
+    themeColorCode: '',
+    scopes: [],
+    allowCustomScopes: true,
+    allowEmptyScopes: true,
+    customScopesAlign: 'bottom',
+    customScopesAlias: 'custom',
+    emptyScopesAlias: 'empty',
+    upperCaseSubject: false,
+    markBreakingChangeMode: false,
+    allowBreakingChanges: ['feat', 'fix'],
+    breaklineNumber: 100,
+    breaklineChar: '|',
+    issuePrefixes: [
+      // 如果使用 gitee 作为开发管理
+      { value: 'link', name: 'link:     链接 ISSUES 进行中' },
+      { value: 'closed', name: 'closed:   标记 ISSUES 已完成' }
+    ],
+    customIssuePrefixAlign: 'top',
+    emptyIssuePrefixAlias: 'skip',
+    customIssuePrefixAlias: 'custom',
+    allowCustomIssuePrefix: true,
+    allowEmptyIssuePrefix: true,
+    confirmColorize: true,
+    maxHeaderLength: Infinity,
+    maxSubjectLength: Infinity,
+    minSubjectLength: 0,
+    scopeOverrides: undefined,
+    defaultBody: '',
+    defaultIssues: '',
+    defaultScope: '',
+    defaultSubject: ''
   }
-};
-
+}
 ```
 
 然后把 commitlint 命令也添加 Husky Hook。运行命令：
@@ -568,14 +626,70 @@ pnpm add commitizen -D
 }
 ```
 ### cz-git
+自动生成git commit信息.
 ```bash
 pnpm add cz-git -D
 ```
-
+```json
+//package.json
+"commit": "git pull && git add -A && git-cz && git push"
+```
+### release-it生成版本变更日志
+```bash
+pnpm add release-it @release-it/conventional-changelog -D
+```
+#### 配置
+新建`.release-it.json`
+```json
+{
+  "github": {
+    "release": true
+  },
+  "git": {
+  	// 生成tag的提交信息,
+    "commitMessage": "release: v${version}"
+  },
+  "npm": {
+    // 不在npm发行
+    "publish": false
+  },
+  "hooks": {
+    "after:bump": "echo 更新版本成功"
+  },
+  "plugins": {
+		"@release-it/conventional-changelog": {
+			"infile": "CHANGELOG.md",
+			"ignoreRecommendedBump": true,
+			"strictSemVer": true,
+			"preset": {
+				"name": "conventionalcommits",
+				"types": [
+					{
+						"type": "feat",
+						"section": "✨新功能"
+					},
+					{
+						"type": "fix",
+						"section": "🐛问题修复"
+					},
+					{
+						"type": "docs",
+						"section": "📚文档"
+					}
+				]
+			}
+		}
+	}
+}
+```
+默认配置下，只会有feat和fix的提交会在changelog中显示出来。
+```json
+// package.json
+"release": "release-it",
+```
 # 环境变量
 ## 环境变量配置
-新建环境变量文件夹`env`.
-在其中新增文件`.env`, `.env.development`, `.env.production`, `.env.test`.
+在根目录新增文件`.env`, `.env.development`, `.env.production`, `.env.test`.
 // .env
 
 ```yaml
@@ -583,7 +697,7 @@ pnpm add cz-git -D
 VITE_GLOB_APP_TITLE = 'React-Admin-SWC'
 
 # port
-VITE_PORT = 3301
+VITE_PORT = 5173
 
 # open 运行 npm run dev 时自动打开浏览器
 VITE_OPEN = true
@@ -694,7 +808,6 @@ export default defineConfig(({ mode }): UserConfig => {
 				'@build': path.join(__dirname, 'build')
 			}
 		},
-		envDir: 'env',
 		// global css
 		css: {},
 		// server config
@@ -860,5 +973,246 @@ export const useEnv = (env: Recordable): ImportMetaEnv => {
 
 ## 关联远程仓库
 ```git
-git add remote
+git add .
+git commit -m "feat: initial app"
+git add remote xxx.git
+git push -u origin master
+```
+
+# 基础选型
+项目初始化时已经将react,vite,ts默认安装了.剩下的就是一些开发需要的基础插件.
+## 安装antd
+一个样式组件库.
+```bash
+pnpm add antd
+```
+### 样式重置
+在`main.tsx`文件中添加.
+```ts
+import "antd/dist/reset.css";
+```
+## 安装vanilla-extract
+CSS-in-JS的零运行时方案.
+```bash
+pnpm add @vanilla-extract/css
+```
+### 配置在vite
+```bash
+pnpm add @vanilla-extract/vite-plugin -D
+```
+```ts
+//vite.config.ts
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+
+export default {
+  plugins: [vanillaExtractPlugin()]
+};
+```
+## axios
+```bash
+pnpm add axios
+```
+## SWR
+SWR 是 Next.js 背后的团队 vecel 开源的一个 用于数据请求的 React Hooks 库.
+
+### 用法示例
+```ts
+import axios from 'axios';
+import useSWR from 'swr';
+
+import { UserResponse } from 'types/User';
+
+const useUser = () => {
+  const { data, error, isLoading, isValidating, mutate } = useSWR<UserResponse>('/user', (url) =>
+    axios.get(url).then((res) => res.data.payload)
+  );
+
+  return {
+    data,
+    reload: mutate,
+    isLoading,
+    isValidating,
+    isError: error,
+  };
+};
+
+export default useUser;
+```
+```ts
+import axios from 'axios';
+import useSWR from 'swr';
+
+import useUser from './useUser';
+
+const useUserDetail = () => {
+  const { data } = useUser();
+  const { data, error, isLoading, isValidating, mutate } = useSWR(
+    data[0].id ? `users/${data[0].id}/detail` : null,
+    (url: string) => axios.get(url).then((res) => res.data.payload)
+  );
+
+  return {
+    data,
+    reload: mutate,
+    isLoading,
+    isValidating,
+    isError: error,
+  };
+};
+
+export default useUserDetail;
+```
+### 结合axios
+新建`src/api/index.ts`文件.
+```ts
+import useSWR, { ConfigInterface, responseInterface } from 'swr'
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+interface Repository {
+  label: string;
+  value: string;
+}
+
+//创建axios实例
+const api = axios.create({
+});
+type JsonData = {
+  code: number,
+  data: Repository[]
+}
+
+export type GetRequest = AxiosRequestConfig
+//定义返回类型
+export interface Return<JsonData, Error>
+  extends Pick<
+  responseInterface<AxiosResponse<JsonData>, AxiosError<Error>>,
+  'isValidating' | 'revalidate' | 'error'
+  > {
+  data: JsonData | undefined
+  response: AxiosResponse<JsonData> | undefined
+  requestKey: string
+}
+
+export interface Config<JsonData = unknown, Error = unknown>
+  extends Omit<
+  ConfigInterface<AxiosResponse<JsonData>, AxiosError<Error>>,
+  'initialData'
+  > {
+  initialData?: JsonData
+}
+//useRequest 封装swr的请求hooks函数
+export default function useRequest<Error = unknown>(
+  request: GetRequest,
+  { initialData, ...config }: Config<JsonData, Error> = {}
+): Return<JsonData, Error> {
+  //如果是开发模式，这里做环境判断，url后面加上".mock"就会走mock数据
+  if (process.env.NODE_ENV === "development") {
+    request.url += ".mock"
+  }
+  const requestKey = request && JSON.stringify(request);
+
+  const { data: response, error, isValidating, revalidate } = useSWR<
+    AxiosResponse<JsonData>,
+    AxiosError<Error>
+  >(requestKey, () => api(request), {
+    ...config,
+    initialData: initialData && {
+      status: 200,
+      statusText: 'InitialData',
+      config: request,
+      headers: {},
+      data: initialData
+    }
+  })
+  // if(response?.data.code !==0){ //handler request error
+  //     throw  "request wrong!"
+  // }
+  return {
+    data: response?.data,
+    requestKey,
+    response,
+    error,
+    isValidating,
+    revalidate
+  }
+}
+```
+
+## zustand
+```bash
+pnpm add zustand
+```
+zustand 做到的第一点创新就是：默认不需要 Provider。直接声明一个 hooks 式的 useStore 后j就可以在不同组件中进行调用。它们的状态会直接共享，简单而美好。
+
+### 用法示例
+```tsx
+// Zustand 状态共享
+// store.ts
+import create from 'zustand'
+
+export const useStore = create(set => ({
+  count: 1,
+  // set 函数合并状态以实现状态更新
+  inc: () => set(state => ({ count: state.count + 1 })),
+}))
+
+// Control.tsx
+import { useStore } from './store';
+
+function Control() {
+  return <button onClick={()=>{
+    useStore.setState((s)=>({...s,count: s.count - 5 }))
+    }}>－5</button>
+}
+
+// AnotherControl.tsx
+import { useStore } from './store';
+
+function AnotherControl() {
+  const inc = useStore(state => state.inc)
+  return <button onClick={inc}> +1 </button>
+}
+
+// Counter.tsx
+import { useStore } from './store';
+
+function Counter() {
+  const { count } = useStore()
+  return <h1>{count}</h1>
+}
+```
+### 自带持久化
+```ts
+// 使用自带的 Persist Middleware
+
+import create from 'zustand'
+import {  persist } from 'zustand/middleware'
+
+interface BearState {
+  bears: number
+  increase: (by: number) => void
+}
+
+const useBearStore = create<BearState>(
+  persist((set) => ({
+    bears: 0,
+    increase: (by) => set((state) => ({ bears: state.bears + by })),
+  }))
+)
+```
+### 自带可调试devtools
+```ts
+import devtools from 'zustand/middleware',
+...
+store = devtools(store)
+```
+
+## 安装react-router
+```bash
+pnpm add react-router-dom
+```
+
+
+## immer
+```bash
+npm add immer
 ```
