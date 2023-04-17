@@ -54,7 +54,7 @@ class Request {
 			error => {
 				console.log(error);
 
-				// const { data } = error.response;
+				const { data } = error.response;
 				// 按照状态码划分
 				//* 401
 				if (data.code === ApiStatus.UNAUTHORIZED) {
