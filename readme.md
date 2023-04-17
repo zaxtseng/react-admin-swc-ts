@@ -26,7 +26,7 @@ react-admin-antd，基于 React18、React-Router v6、React-Hooks、Redux && Red
 | plugin-react-swc | SWC+esbuild 编译,速度上天            |
 | typescript       | js 的超集                            |
 | antd5            | css 组件库(后期可能换 MUI,ChakraUI)  |
-| vanilla-extract  | CSS-in-JS 库(后期可能换 tailwindcss) |
+| linaria          | CSS-in-JS 库(后期可能换 tailwindcss) |
 | zustand          | 轻量级状态管理库(替代 redux)         |
 | axios            | 请求三方库                           |
 | SWR              | 请求状态库(替代 useFetch,ReactQuery) |

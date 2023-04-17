@@ -1,11 +1,11 @@
 import { PageBaseUrl } from '@/config';
 import Layout from '@/layout';
 import { useBoundStore } from '@/store';
+import Login from '@/views/Login';
 import ErrorPage from '@/views/errors';
 import NotFound from '@/views/errors/404';
-import Login from '@/views/Login';
 import { lazy, memo, useEffect, useMemo, useState } from 'react';
-import { createBrowserRouter, redirect, RouteObject, RouterProvider } from 'react-router-dom';
+import { RouteObject, RouterProvider, createBrowserRouter, redirect } from 'react-router-dom';
 import { IRouteObject } from './interface';
 import Lazy from './utils/Lazy';
 
@@ -58,7 +58,7 @@ const Router = () => {
 			errorElement: <ErrorPage />,
 			children: [{ errorElement: <ErrorPage />, children }],
 			loader() {
-				const token = localStorage.getItem('token');
+				const token = localStorage.getItem('accessToken');
 				if (!token) {
 					return redirect('/login');
 				}

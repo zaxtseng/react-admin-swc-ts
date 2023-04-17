@@ -8,10 +8,16 @@ export interface RouteSlice {
 	initRoutes: (payload: any) => void;
 }
 
-export const createRouteSlice: StateCreator<RouteSlice, [['zustand/devtools', never]], [], RouteSlice> = set => {
+export const createRouteSlice: StateCreator<
+	RouteSlice,
+	[['zustand/devtools', never], ['zustand/immer', never]],
+	[],
+	RouteSlice
+> = set => {
 	return {
 		routes: [],
 		current: undefined,
+		// setCurrent: payload => set((state) => { state.current = payload }, false, 'routeCurrentChange'),
 		setCurrent: payload => set(() => ({ current: payload }), false, 'routeCurrentChange'),
 		initRoutes: payload => set(() => ({ routes: payload }), false, 'initRoutes')
 	};

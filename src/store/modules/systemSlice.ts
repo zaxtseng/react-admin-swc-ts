@@ -6,7 +6,12 @@ export interface SystemSlice {
 	initRoutes: (payload: any) => void;
 }
 
-export const createSystemSlice: StateCreator<SystemSlice, [['zustand/devtools', never]], [], SystemSlice> = set => ({
+export const createSystemSlice: StateCreator<
+	SystemSlice,
+	[['zustand/devtools', never], ['zustand/immer', never]],
+	[],
+	SystemSlice
+> = set => ({
 	routes: [],
 	initRoutes: payload => set(() => ({ routes: payload }), false, 'systemSlice/initRoutes')
 });

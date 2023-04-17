@@ -280,9 +280,9 @@ module.exports = {
 ```
 
 ### stylelint
-因为使用了CSS-in-JS方案,未使用less或者scss方案,而且vanilla-extract暂时没有stylelint规则,所以暂时不使用下面的流程.
+因为使用了CSS-in-JS方案,未使用less或者scss方案,而且linaria暂时没有stylelint规则,所以暂时不使用下面的流程.
 
-当然如果你没有使用vanilla-extract,而使用less或者scss,则可以使用下面的方案.
+当然如果你没有使用linaria,而使用less或者scss,则可以使用下面的方案.
 
 用于检查 css 语法错误.安装 vscode 插件 Stylelint
 
@@ -991,22 +991,24 @@ pnpm add antd
 ```ts
 import "antd/dist/reset.css";
 ```
-## 安装vanilla-extract
+## 安装linaria
 CSS-in-JS的零运行时方案.
 ```bash
-pnpm add @vanilla-extract/css
+pnpm add @linaria/core @linaria/react
 ```
 ### 配置在vite
 ```bash
-pnpm add @vanilla-extract/vite-plugin -D
+pnpm add @linaria/vite -D
 ```
 ```ts
 //vite.config.ts
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import { defineConfig } from 'vite';
+import linaria from '@linaria/vite';
 
-export default {
-  plugins: [vanillaExtractPlugin()]
-};
+export default defineConfig(() => ({
+  // ...
+  plugins: [linaria()],
+}));
 ```
 ## axios
 ```bash

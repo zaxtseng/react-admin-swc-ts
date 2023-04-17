@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
 import { shallow } from 'zustand/shallow';
-import { createSystemSlice, SystemSlice } from './modules';
+import { AuthSlice, SystemSlice, createAuthSlice, createSystemSlice } from './modules';
 
 /**
  * @name useBoundStore
@@ -9,15 +10,15 @@ import { createSystemSlice, SystemSlice } from './modules';
  * @description 根store,其中中间件devtools开发调试用,
  * @description persist持久化存储用
  */
-export const useBoundStore = create<SystemSlice>()(
+export const useBoundStore = create<SystemSlice & AuthSlice>()(
 	devtools(
 		persist(
-			(...a) => ({
-				...createSystemSlice(...a)
-			}),
+			immer((...a) => ({
+				...createSystemSlice(...a),
+				...createAuthSlice(...a)
+			})),
 			{ name: 'RootStore' }
-		),
-		{ name: 'RootStore' }
+		)
 	)
 );
 

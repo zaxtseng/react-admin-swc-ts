@@ -1,4 +1,4 @@
-import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin';
+import linaria from '@linaria/vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -40,7 +40,7 @@ export default defineConfig(({ mode }): UserConfig => {
 			// 代理跨域（mock 不需要配置，这里只是个事列）
 			proxy: {
 				'/api': {
-					target: `https://localhost:${viteEnv.VITE_PORT}/api`,
+					target: `http://127.0.0.1:4523/m1/2598181-0-default/api`, // apifox的本地Mock功能
 					changeOrigin: true,
 					rewrite: path => path.replace(/^\/api/, '')
 				}
@@ -49,7 +49,7 @@ export default defineConfig(({ mode }): UserConfig => {
 		// plugins
 		plugins: [
 			react(),
-			vanillaExtractPlugin(),
+			linaria(),
 			createHtmlPlugin({
 				inject: {
 					data: {
